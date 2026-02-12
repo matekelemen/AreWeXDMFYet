@@ -26,6 +26,10 @@ Bugs are listed by category for both `XDMF2` and `XDMF3` readers. Check the comm
     - Rows and columns of rank 3 matrices are ignored.
     - Any dimension other than the last one of a matrix with high rank (more than 2) is ignored.
 
-### Broken "Coordinate" type for "DataItem"s
+### Broken `Coordinates` type for `DataItem`s
 
-- `coordinate.xdmf` demonstrates that even the simplest use case of the "Coordinates" type of "DataItem" (select a subset of scalars) is broken.
+- `coordinate.xdmf` demonstrates that even the simplest use case of the `Coordinates` type of `DataItem` (select a subset of scalars) is broken.
+
+### Broken `Hyperslab` type for `DataItem`s
+
+- todo
