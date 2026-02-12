@@ -1,0 +1,72 @@
+<Xdmf Version="3.0">
+    <Domain>
+        <Grid Name="root" GridType="Uniform">
+
+            <Geometry GeometryType="XY">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="4 2">
+                    0 0
+                    1 0
+                    0 1
+                    1 1
+                </DataItem>
+            </Geometry>
+
+            <Topology TopologyType="Quadrilateral" NumberOfElements="1" NodesPerElement="4">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 4">
+                    0 1 3 2
+                </DataItem>
+            </Topology>
+
+            <!--
+                Contiguous selection of 4 scalars out of a set of 4 (i.e. no-op).
+                - Xdmf2: Works fine.
+                - Xdmf3: Segfaults while reading.
+            -->
+            <Attribute Name="scalar1" Center="Node" AttributeType="Scalar">
+                <DataItem ItemType="Coordinates" Dimensions="4">
+                    <DataItem NumberType="Int" ItemType="Uniform" Format="XML" Dimensions="4">
+                        1 2 3 4
+                    </DataItem>
+                    <DataItem NumberType="Int" ItemType="Uniform" Format="XML" Dimensions="4">
+                        1 2 3 4
+                    </DataItem>
+                </DataItem>
+            </Attribute>
+
+            <!--
+                Contiguous selection of 4 scalars out of a set of 4, in reverse order.
+                - Xdmf2: Completely ignores the reverse-order selection.
+                - Xdmf3: Segfaults while reading.
+            -->
+            <Attribute Name="scalar2" Center="Node" AttributeType="Scalar">
+                <DataItem ItemType="Coordinates" Dimensions="4">
+                    <DataItem NumberType="Int" ItemType="Uniform" Format="XML" Dimensions="4">
+                        4 3 2 1
+                    </DataItem>
+                    <DataItem NumberType="Int" ItemType="Uniform" Format="XML" Dimensions="4">
+                        1 2 3 4
+                    </DataItem>
+                </DataItem>
+            </Attribute>
+
+            <!--
+                Non-contiguous selection of 4 scalars out of a set of 5.
+                - Xdmf2: Completely ignores the selection This most likely triggers
+                         a memory corruption in ParaView because it segfaults upon
+                         reloading the file.
+                - Xdmf3: Segfaults while reading.
+            -->
+            <Attribute Name="scalar3" Center="Node" AttributeType="Scalar">
+                <DataItem ItemType="Coordinates" Dimensions="4">
+                    <DataItem NumberType="Int" ItemType="Uniform" Format="XML" Dimensions="4">
+                        1 2 4 5
+                    </DataItem>
+                    <DataItem NumberType="Int" ItemType="Uniform" Format="XML" Dimensions="5">
+                        1 2 3 4 5
+                    </DataItem>
+                </DataItem>
+            </Attribute>
+
+        </Grid>
+    </Domain>
+</Xdmf>

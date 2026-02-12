@@ -1,0 +1,139 @@
+<Xdmf Version="3.0">
+    <Domain>
+        <Grid Name="root" GridType="Uniform">
+
+            <Geometry GeometryType="XY">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="4 2">
+                    0 0
+                    1 0
+                    0 1
+                    1 1
+                </DataItem>
+            </Geometry>
+
+            <Topology TopologyType="Quadrilateral" NumberOfElements="1" NodesPerElement="4">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 4">
+                    0 1 3 2
+                </DataItem>
+            </Topology>
+
+            <!--
+                A matrix attribute with a single component (i.e. 1 row, 1 column).
+                - Xdmf2: Unlike with a single-component vector attribute, ParaView correctly
+                         handles this case.
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix11" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 1 1">
+                    1
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A matrix attribute identical to a 2-component row vector.
+                - Xdmf2: Unlike its vector counterpart, ParaView manages to correctly
+                         parse the two components without inserting a fake third one.
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix12" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 1 2">
+                    1 2
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A matrix attribute identical to a 2-component column vector.
+                - Xdmf2: Unlike its row-vector counterpart, ParaView fails to parse
+                         this one correctly. It only detects the first component of
+                         the attribute, even though the range seems to pick up the
+                         second component (albeit in the wrong dimension).
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix21" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 2 1">
+                    1 2
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A 2x2 matrix attribute.
+                - Xdmf2: Instead of providing access to the individual components of the
+                         attribute, ParaView offers to choose between 'X' and 'Y' components
+                         that only pick up the first entry of each row
+                         (even though the scale is aware of the rest of the components).
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix22" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 2 2">
+                    1 2 3 4
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A 3x3 matrix attribute.
+                - Xdmf2: Same type of inconsistencies as with the 2x2 matrix, except
+                         with an extra 'Z' component.
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix33" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 3 3">
+                    1 2 3 4 5 6 7 8 9
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A matrix attribute identical to a 6-component row vector.
+                - Xdmf2, Xdmf3: ParaView interprets this type as a symmetric 3x3 matrix,
+                                defined by its 'XX' 'YY' 'ZZ' 'XY' 'YZ' 'XZ' components.
+            -->
+            <Attribute Name="matrix16" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 1 6">
+                    1 2 3 4 5 6
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A 1x1x6 matrix attribute.
+                - Xdmf2, Xdmf3: Also interpreted as a symmetric 3x3 matrix.
+            -->
+            <Attribute Name="matrix116" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 1 1 6">
+                    1 2 3 4 5 6
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A 2x6 matrix attribute.
+                - Xdmf2: The moment Paraview sees that a matrix attribute has
+                         6 columns, it tries to interpret it as a symmetric 3x3,
+                         matrix defined by its 'XX' 'YY' 'ZZ' 'XY' 'YZ' 'XZ' components,
+                         completely ignoring components in the second row.
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix26" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 2 6">
+                    1 2 3 4 5 6 7 8 9 10 11 12
+                </DataItem>
+            </Attribute>
+
+            <!--
+                A 2x3x4 matrix attribute.
+                - Xdmf2: Only the last dimension is detected, mapping contiguously to
+                         components at the beginning of the flattened matrix.
+                - Xdmf3: Works fine.
+            -->
+            <Attribute Name="matrix234" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="2 3 4">
+                    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+                </DataItem>
+            </Attribute>
+
+            <Attribute Name="matrix1234" Center="Cell" AttributeType="Matrix">
+                <DataItem ItemType="Uniform" Format="XML" Dimensions="1 2 3 4">
+                    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+                </DataItem>
+            </Attribute>
+
+        </Grid>
+    </Domain>
+</Xdmf>
